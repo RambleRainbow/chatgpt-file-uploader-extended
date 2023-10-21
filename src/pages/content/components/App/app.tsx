@@ -23,9 +23,11 @@ export default function App() {
     singleFilePrompt,
     multipleFilesPrompt,
     lastPartPrompt,
+    finishEventPrompt,
     setSingleFilePrompt,
     setMultipleFilesPrompt,
     setLastPartPrompt,
+    setFinishEventPrompt,
     setBasePrompt,
     updateLocalStorageSettings,
     blacklist,
@@ -101,11 +103,13 @@ export default function App() {
               singleFilePrompt={singleFilePrompt}
               multipleFilesPrompt={multipleFilesPrompt}
               lastPartPrompt={lastPartPrompt}
+              finishEventPrompt={finishEventPrompt}
               setSingleFilePrompt={setSingleFilePrompt}
               setMultipleFilesPrompt={setMultipleFilesPrompt}
               multipleFilesUpPrompt={multipleFilesUpPrompt}
               setMultipleFilesUpPrompt={setMultipleFilesUpPrompt}
               setLastPartPrompt={setLastPartPrompt}
+              setFinishEventPrompt={setFinishEventPrompt}
               setBasePrompt={setBasePrompt}
               updateLocalStorageSettings={updateLocalStorageSettings}
               blacklist={blacklist}

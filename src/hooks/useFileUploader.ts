@@ -6,6 +6,7 @@ import {
   DEFAULT_TIMEOUT_INTERVAL,
   IMAGE_FILE_TYPES,
   LAST_PART_PROMPT,
+  FINISH_EVENT_PROMPT,
   MULTI_PART_FILE_PROMPT,
   SINGLE_FILE_PROMPT,
   ZIP_BLACKLIST,
@@ -47,6 +48,8 @@ const useFileUploader = () => {
   );
   const [lastPartPrompt, setLastPartPrompt] =
     useState<string>(LAST_PART_PROMPT);
+  const [finishEventPrompt, setFinishEventPrompt] =
+    useState<string>(FINISH_EVENT_PROMPT);
 
   const [blacklist, setBlacklist] = useState<string[]>(ZIP_BLACKLIST);
   const [ignoreExtensions, setIgnoreExtensions] =
@@ -82,6 +85,10 @@ const useFileUploader = () => {
 
     const localLastPartPrompt = await getFromLocalStorage<string>(
       "lastPartPrompt"
+    );
+
+    const localFinishEventPrompt = await getFromLocalStorage<string>(
+      "finishEventPrompt"
     );
 
     const localMultipleFilesUpPrompt = await getFromLocalStorage<string>(
@@ -122,6 +129,10 @@ const useFileUploader = () => {
       setLastPartPrompt(localLastPartPrompt);
     }
 
+    if (localFinishEventPrompt) {
+      setFinishEventPrompt(localFinishEventPrompt);
+    }
+
     if (localMultipleFilesUpPrompt) {
       setMultipleFilesUpPrompt(localMultipleFilesUpPrompt);
     }
@@ -140,6 +151,7 @@ const useFileUploader = () => {
     await saveToLocalStorage("singleFilePrompt", singleFilePrompt);
     await saveToLocalStorage("multipleFilesPrompt", multipleFilesPrompt);
     await saveToLocalStorage("lastPartPrompt", lastPartPrompt);
+    await saveToLocalStorage("finishEventPrompt", finishEventPrompt);
     await saveToLocalStorage("multipleFilesUpPrompt", multipleFilesUpPrompt);
   };
 
@@ -331,6 +343,7 @@ ${text}`;
         await submitConversation(chunk, part, i === numChunks - 1, numChunks);
         await wait();
         setCurrentPart(part);
+
         let chatgptReady = false;
         let currentTry = 0; // Initialize the counter
 
@@ -540,9 +553,11 @@ ${text}`;
     singleFilePrompt,
     multipleFilesPrompt,
     lastPartPrompt,
+    finishEventPrompt,
     setSingleFilePrompt,
     setMultipleFilesPrompt,
     setLastPartPrompt,
+    setFinishEventPrompt,
     setBasePrompt,
     updateLocalStorageSettings,
     blacklist,

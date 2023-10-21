@@ -16,12 +16,14 @@ interface SettingsProps {
   multipleFilesPrompt: string;
   multipleFilesUpPrompt: string;
   lastPartPrompt: string;
+  finishEventPrompt: string;
   blacklist: string[];
   ignoreExtensions: string[];
   setSingleFilePrompt: (prompt: string) => void;
   setMultipleFilesPrompt: (prompt: string) => void;
   setMultipleFilesUpPrompt: (prompt: string) => void;
   setLastPartPrompt: (prompt: string) => void;
+  setFinishEventPrompt: (prompt: string) => void;
   setBasePrompt: (prompt: string) => void;
   onChunkSizeChange: (chunkSize: string) => void;
   onOverlapSizeChange: (overlapSize: string) => void;
@@ -39,9 +41,11 @@ const Settings = ({
   singleFilePrompt,
   multipleFilesPrompt,
   lastPartPrompt,
+  finishEventPrompt,
   setSingleFilePrompt,
   setMultipleFilesPrompt,
   setLastPartPrompt,
+  setFinishEventPrompt,
   setBasePrompt,
   updateLocalStorageSettings,
   ignoreExtensions,
@@ -268,9 +272,21 @@ const Settings = ({
                     <textarea
                       rows={3}
                       className="m-0 w-full resize-none border-0 bg-transparent p-0 pr-7 focus:ring-0 focus-visible:ring-0 dark:bg-transparent pl-2 md:pl-0"
-                      placeholder="Enter the multi file prompt"
+                      placeholder="Enter the finish event prompt"
                       value={lastPartPrompt}
                       onChange={(e) => setLastPartPrompt(e.target.value)}
+                    />
+                  </Row>
+                  <Row
+                    label="Finish Event Prompt"
+                    description="This prompt will be used for the finished event triggered after all parts are commited."
+                  >
+                    <textarea
+                      rows={3}
+                      className="m-0 w-full resize-none border-0 bg-transparent p-0 pr-7 focus:ring-0 focus-visible:ring-0 dark:bg-transparent pl-2 md:pl-0"
+                      placeholder="Enter the multi file prompt"
+                      value={finishEventPrompt}
+                      onChange={(e) => setFinishEventPrompt(e.target.value)}
                     />
                   </Row>
                 </div>

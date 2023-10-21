@@ -358,15 +358,14 @@ ${text}`;
             fireEvent("file_upload_cancelled", {
               stopped_at_part: part.toString(),
             });
-            break;
+            return;
           }
-        }
-
-        if (currentTry >= maxTries) {
-          console.error("Max tries exceeded. Exiting...");
-          setError("Max tries exceeded. Exiting...");
-          clearState();
-          return; // Exit the function or handle this case appropriately
+          if (currentTry >= maxTries) {
+            console.error("Max tries exceeded. Exiting...");
+            setError("Max tries exceeded. Exiting...");
+            clearState();
+            return; // Exit the function or handle this case appropriately
+          }
         }
 
         if (!isStopRequestedRef.current) {

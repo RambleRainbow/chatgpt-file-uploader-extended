@@ -39,6 +39,8 @@ export default function App() {
     setMultipleFilesUpPrompt,
     overlapSize,
     onOverlapSizeChange,
+    timeoutInterval,
+    onTimeoutIntervalChange,
   } = useFileUploader();
 
   const { firePageViewEvent } = useGoogleAnalytics();
@@ -93,6 +95,8 @@ export default function App() {
               chunkSize={chunkSize}
               overlapSize={overlapSize}
               onOverlapSizeChange={onOverlapSizeChange}
+              timeoutInterval={timeoutInterval}
+              onTimeoutIntervalChange={onTimeoutIntervalChange}
               basePrompt={basePrompt}
               singleFilePrompt={singleFilePrompt}
               multipleFilesPrompt={multipleFilesPrompt}

@@ -10,6 +10,7 @@ import SendEmailToMe from "../SendEmailToMe";
 interface SettingsProps {
   chunkSize: number;
   overlapSize: number;
+  timeoutInterval: number;
   basePrompt: string;
   singleFilePrompt: string;
   multipleFilesPrompt: string;
@@ -24,6 +25,7 @@ interface SettingsProps {
   setBasePrompt: (prompt: string) => void;
   onChunkSizeChange: (chunkSize: string) => void;
   onOverlapSizeChange: (overlapSize: string) => void;
+  onTimeoutIntervalChange: (timeoutInterval: string) => void;
   updateLocalStorageSettings: () => void;
   setBlacklist: (blacklist: string[]) => void;
   setIgnoreExtensions: (ignoreExtensions: string[]) => void;
@@ -51,6 +53,8 @@ const Settings = ({
   setMultipleFilesUpPrompt,
   onOverlapSizeChange,
   overlapSize,
+  onTimeoutIntervalChange,
+  timeoutInterval,
 }: SettingsProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [ignoreExtensionsInput, setIgnoreExtensionsInput] = useState("");
@@ -170,6 +174,18 @@ const Settings = ({
                       placeholder="Enter number of overlap size"
                       value={overlapSize}
                       onChange={(e) => onOverlapSizeChange(e.target.value)}
+                    />
+                  </Row>
+                  <Row
+                    isNewFeature
+                    label="Timeout Interval(in seconds)"
+                    description="###Timeout check for each part. Increase it for large parts"
+                  >
+                    <input
+                      className="m-0 w-full resize-none border-0 bg-transparent p-0 pr-7 focus:ring-0 focus-visible:ring-0 dark:bg-transparent pl-2 md:pl-0"
+                      placeholder="Enter number of overlap size"
+                      value={timeoutInterval}
+                      onChange={(e) => onTimeoutIntervalChange(e.target.value)}
                     />
                   </Row>
                   <Divider />

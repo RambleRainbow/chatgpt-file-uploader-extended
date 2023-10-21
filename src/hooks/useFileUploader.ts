@@ -3,6 +3,7 @@ import { getFromLocalStorage, saveToLocalStorage } from "@src/helpers";
 import {
   BASE_PROMPT,
   DEFAULT_CHUNCK_SIZE,
+  DEFAULT_TIMEOUT_INTERVAL,
   IMAGE_FILE_TYPES,
   LAST_PART_PROMPT,
   MULTI_PART_FILE_PROMPT,
@@ -54,6 +55,9 @@ const useFileUploader = () => {
   const isStopRequestedRef = useRef(false);
   const [isStopRequested, setIsStopRequested] = useState(false);
   const [overlapSize, setOverlapSize] = useState(DEFAULT_OVERLAP_SIZE);
+  const [timeoutInterval, setTimeoutInterval] = useState(
+    DEFAULT_TIMEOUT_INTERVAL
+  );
 
   const { fireEvent } = useGoogleAnalytics();
 
@@ -61,6 +65,10 @@ const useFileUploader = () => {
     const localChunkSize = await getFromLocalStorage<string>("chunkSize");
 
     const localOverlapSize = await getFromLocalStorage<number>("overlapSize");
+
+    const localTimeoutInterval = await getFromLocalStorage<number>(
+      "timeoutInterval"
+    );
 
     const localBasePrompt = await getFromLocalStorage<string>("basePrompt");
 
@@ -120,6 +128,10 @@ const useFileUploader = () => {
 
     if (localOverlapSize) {
       setOverlapSize(localOverlapSize);
+    }
+
+    if (localTimeoutInterval) {
+      setTimeoutInterval(localTimeoutInterval);
     }
   };
 
@@ -306,7 +318,7 @@ ${text}`;
   const handleFileContent = async (fileContent: string) => {
     const numChunks = Math.ceil(fileContent.length / chunkSize);
     setTotalParts(numChunks);
-    const maxTries = 20; // Set max tries to 20
+    const maxTries = timeoutInterval ?? DEFAULT_TIMEOUT_INTERVAL;
 
     const splittedDocuments = await splitToDocuments(fileContent, chunkSize);
 
@@ -451,6 +463,29 @@ ${text}`;
     }
   }
 
+  async function onTimeoutIntervalChange(value: string) {
+    try {
+      let parsedValue = parseInt(value);
+
+      if (isNaN(parsedValue)) {
+        return;
+      }
+
+      if (parsedValue < 10) {
+        parsedValue = 10;
+      }
+
+      if (parsedValue > 999) {
+        parsedValue = 999;
+      }
+
+      await saveToLocalStorage("timeoutInterval", parsedValue);
+      setTimeoutInterval(parsedValue);
+    } catch (error) {
+      setTimeoutInterval(DEFAULT_OVERLAP_SIZE);
+    }
+  }
+
   useEffect(() => {
     isStopRequestedRef.current = isStopRequested;
     if (isStopRequested) {
@@ -521,6 +556,8 @@ ${text}`;
     setMultipleFilesUpPrompt,
     overlapSize,
     onOverlapSizeChange,
+    timeoutInterval,
+    onTimeoutIntervalChange,
   };
 };
 

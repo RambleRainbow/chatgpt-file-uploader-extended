@@ -1,5 +1,6 @@
 export const DEFAULT_CHUNCK_SIZE = 10000;
 export const DEFAULT_OVERLAP_SIZE = 100;
+export const DEFAULT_TIMEOUT_INTERVAL = 20;
 
 export const WAIT_TIME = 1000;
 export const PACKAGE_VERSION = "1.5.1";

@@ -334,6 +334,37 @@ ${text}`;
 
     const splittedDocuments = await splitToDocuments(fileContent, chunkSize);
 
+    async function waitForChatGPTReady(
+      part: number | undefined = undefined
+    ): Promise<boolean> {
+      let chatgptReady = false;
+      let currentTry = 0; // Initialize the counter
+
+      while (!chatgptReady && !isStopRequestedRef.current) {
+        await wait();
+        chatgptReady = !document.querySelector(
+          ".text-2xl > span:not(.invisible)"
+        );
+        currentTry += 1; // Increment the counter
+
+        if (isStopRequestedRef.current) {
+          if (typeof part !== "undefined") {
+            fireEvent("file_upload_cancelled", {
+              stopped_at_part: part.toString(),
+            });
+          }
+          return false;
+        }
+        if (currentTry >= maxTries) {
+          console.error("Max tries exceeded. Exiting...");
+          setError("Max tries exceeded. Exiting...");
+          clearState();
+          return false; // Exit the function or handle this case appropriately
+        }
+      }
+      return true;
+    }
+
     async function processChunk(i: number) {
       if (i < numChunks && !isStopRequestedRef.current) {
         const chunk = splittedDocuments[i];
@@ -344,33 +375,17 @@ ${text}`;
         await wait();
         setCurrentPart(part);
 
-        let chatgptReady = false;
-        let currentTry = 0; // Initialize the counter
+        const isChatGPTReady = await waitForChatGPTReady(part);
 
-        while (!chatgptReady && !isStopRequestedRef.current) {
-          await wait();
-          chatgptReady = !document.querySelector(
-            ".text-2xl > span:not(.invisible)"
-          );
-          currentTry += 1; // Increment the counter
-
-          if (isStopRequestedRef.current) {
-            fireEvent("file_upload_cancelled", {
-              stopped_at_part: part.toString(),
-            });
-            return;
-          }
-          if (currentTry >= maxTries) {
-            console.error("Max tries exceeded. Exiting...");
-            setError("Max tries exceeded. Exiting...");
-            clearState();
-            return; // Exit the function or handle this case appropriately
-          }
-        }
-
-        if (!isStopRequestedRef.current) {
+        if (isChatGPTReady) {
           processChunk(i + 1); // Process the next chunk
         }
+      } else if (i == numChunks && !isStopRequestedRef.current) {
+        if (finishEventPrompt) {
+          await simulateEnterKey(finishEventPrompt);
+          await waitForChatGPTReady();
+        }
+        clearState();
       } else {
         clearState();
       }

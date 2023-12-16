@@ -2,7 +2,7 @@ import packageJson from "./package.json";
 
 const manifest: chrome.runtime.ManifestV3 = {
   manifest_version: 3,
-  name: "ChatGPT File Uploader Extended",
+  name: "ChatGPT File Uploader Extended RainbowV",
   version: packageJson.version,
   description: packageJson.description,
   icons: {
